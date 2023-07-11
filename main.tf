@@ -1,4 +1,4 @@
-resource "azurerm_app_service_custom_hostname_binding" "windows_web_apps" {
+resource "azurerm_app_service_custom_hostname_binding" "secure_custom_domain" {
   for_each = var.custom_domain
 
   hostname            = each.value.hostname
@@ -10,21 +10,21 @@ resource "azurerm_app_service_custom_hostname_binding" "windows_web_apps" {
   }
 }
 
-resource "azurerm_app_service_managed_certificate" "windows_web_apps" {
-  for_each = var.custom_domain
+resource "azurerm_app_service_certificate" "secure_custom_domain" {
+  for_each = var.app_service_certificate
 
-  custom_hostname_binding_id = azurerm_app_service_custom_hostname_binding.windows_web_apps[each.key].id
-
-  provisioner "local-exec" {
-    command = "sleep 60"
-  }
+  name                = each.value.name
+  resource_group_name = each.value.resource_group_name
+  location            = each.value.location
+  key_vault_secret_id = each.value.key_vault_certificate_id
 }
 
-resource "azurerm_app_service_certificate_binding" "windows_web_apps" {
+
+resource "azurerm_app_service_certificate_binding" "secure_custom_domain" {
   for_each = var.custom_domain
 
-  hostname_binding_id = azurerm_app_service_custom_hostname_binding.windows_web_apps[each.key].id
-  certificate_id      = azurerm_app_service_managed_certificate.windows_web_apps[each.key].id
+  hostname_binding_id = azurerm_app_service_custom_hostname_binding.secure_custom_domain[each.key].id
+  certificate_id      = azurerm_app_service_certificate.secure_custom_domain[each.value.cert_key].id
   ssl_state           = "SniEnabled"
 
 }
