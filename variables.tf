@@ -4,9 +4,11 @@ variable "custom_domain" {
     {
       hostname            = string
       app_service_name    = string
+      app_service_slot_id = string
       location            = string
       resource_group_name = string
       cert_key            = string
+      deploy_slot         = bool
     }
   ))
 }
@@ -18,5 +20,6 @@ variable "app_service_certificate" {
     resource_group_name      = string
     location                 = string
     key_vault_certificate_id = string
+    tags = map(any)
   }))
 }
