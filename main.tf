@@ -17,7 +17,7 @@ resource "azurerm_app_service_certificate" "secure_custom_domain" {
   resource_group_name = each.value.resource_group_name
   location            = each.value.location
   key_vault_secret_id = each.value.key_vault_certificate_id
-  tags = each.value.tags
+  tags                = each.value.tags
 }
 
 resource "azurerm_app_service_certificate_binding" "secure_custom_domain" {
@@ -35,8 +35,8 @@ resource "azurerm_app_service_slot_custom_hostname_binding" "secure_custom_domai
 
   app_service_slot_id = each.value.app_service_slot_id
   hostname            = format("staging-%s", each.value.hostname)
-  ssl_state = "SniEnabled"
-  thumbprint = azurerm_app_service_certificate.secure_custom_domain[each.value.cert_key].thumbprint
+  ssl_state           = "SniEnabled"
+  thumbprint          = azurerm_app_service_certificate.secure_custom_domain[each.value.cert_key].thumbprint
 
   provisioner "local-exec" {
     command = "sleep 180"

@@ -20,6 +20,6 @@ variable "app_service_certificate" {
     resource_group_name      = string
     location                 = string
     key_vault_certificate_id = string
-    tags = map(any)
+    tags                     = map(any)
   }))
 }
